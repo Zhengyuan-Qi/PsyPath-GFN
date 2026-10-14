@@ -71,10 +71,11 @@ model selection and thresholds use development data. Test targets are reserved
 for final evaluation. Online inference recomputes the representations from the
 interview and applies the fitted downstream model.
 
-[docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) gives commands for the main
-model, component removals, supervision-matched pooling, policy/action controls,
-ten external adaptations and mechanism statistics. Seeds are 7, 17, 27, 41 and 53.
-Configuration files and reference/ identify the paper protocol.
+[docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) gives commands for PsyPath-GFN,
+component ablations, matched controls and mechanism statistics. Seeds are
+7, 17, 27, 41 and 53. Configuration files and reference/ identify the protocol.
+This repository covers the proposed model and its direct controls; the paper's
+Supplementary Section S4 describes the external architecture comparisons.
 
 ## Tests
 

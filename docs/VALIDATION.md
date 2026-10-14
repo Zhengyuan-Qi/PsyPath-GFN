@@ -1,27 +1,35 @@
 # Tests And Reference Checks
 
-Run the lightweight release tests:
+Run the release-interface checks:
 
-    python check_release.py
-    python -m unittest tests.test_release_features -v
+```bash
+python check_release.py
+python -m unittest tests.test_release_features -v
+```
 
-With requirements-core.txt installed, run the existing numerical/model tests:
+With `requirements-core.txt` installed, run the model and statistics tests:
 
-    python check_package.py
-    python test_online.py
+```bash
+python check_package.py
+python test_online.py
+python -m unittest scripts.test_psypath_review_controls -v
+python -m unittest scripts.test_review_statistics -v
+python -m unittest tests.test_score_isolation -v
+```
 
-## Scope
+These tests cover input contracts, checkpoint hashes, portable paths, command
+construction, split-specific target loading, matched controls and aggregation.
+They use synthetic inputs and run without clinical recordings or model weights.
 
-| Check | Coverage |
-| --- | --- |
-| Archive integrity | Python/JSON parsing and SHA256 checks |
-| Data-free tests | Input contracts, portable paths, command construction and path aggregation |
-| Saved-result checks | F1/AUROC for 15 task/seed records; multi-path losses and sample SDs |
-| Checkpoint replay | DAIC-WOZ seed 7, all 47 test participants |
-| Fresh-encoding comparison | One complete DAIC-WOZ training interview; probability, severity and selections matched the saved-representation route |
+`reference/` contains aggregate results for the five paper seeds, including
+matched-control differences and paired participant intervals.
+`verify_saved_results.py` and `summarize.py` check saved experiment outputs.
 
-The checkpoint and fresh-encoding checks were run in the research environment.
-`prepare_weights.py` checks tensors and synthetic PIM predictions during export.
-The data-free tests exercise the code interfaces; clinical evaluation uses the
-authorized data and trained models described in [the experiment guide](REPRODUCIBILITY.md).
-`reference/` contains seed-level aggregate metrics.
+Checkpoint replay in the research environment covered DAIC-WOZ seed 7 and all
+47 test participants. A fresh-encoding comparison on one complete DAIC-WOZ
+training interview matched the saved-representation route in probability,
+severity and selected entries. `prepare_weights.py` verifies model tensors and
+synthetic PIM predictions during checkpoint export.
+
+Clinical evaluation uses authorized data and trained checkpoints as described
+in [Training And Evaluation](REPRODUCIBILITY.md).

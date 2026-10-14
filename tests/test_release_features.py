@@ -155,6 +155,24 @@ class DeploymentTests(unittest.TestCase):
 
 
 class CommandTests(unittest.TestCase):
+    def test_evidence_suite_dry_run(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / 'run'
+            command = [sys.executable, str(ROOT / 'scripts/run_psypath_review_suite.py'),
+                       '--project', str(ROOT),
+                       '--cache', directory, '--contract', directory,
+                       '--main-root', directory, '--output', str(output),
+                       '--dry-run']
+            p = subprocess.run(command, capture_output=True, text=True)
+            self.assertEqual(p.returncode, 0, p.stderr)
+            plan = json.loads(p.stdout)
+            self.assertEqual(len(plan['development']), 15)
+            self.assertEqual(len(plan['test_after_all_development_locks']), 15)
+            for command in plan['development']:
+                self.assertIn('develop', command)
+                self.assertEqual(command[command.index('--cache') + 1], directory)
+            self.assertFalse(output.exists())
+
     def test_export_help_needs_no_model_dependencies(self):
         p = subprocess.run([sys.executable, str(ROOT / "prepare_weights.py"), "--help"],
                            capture_output=True, text=True)

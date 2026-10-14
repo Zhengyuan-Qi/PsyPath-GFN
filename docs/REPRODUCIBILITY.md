@@ -36,10 +36,11 @@ Cache layout is `CACHE/{daic,edaic}/cache/PID.npz`, with the extraction contract
 in each release directory. Each participant archive contains C/A/Q/V arrays and
 the metadata used for response-event alignment. `configs/encoder_*.json` records
 the extraction settings. Run the encoder with the authorized dataset roots and
-backbone path from `--help`; the loader requires the actual release files. C/A/Q
-are text/audio-conditioned representations. V uses aligned numeric descriptors,
-not raw video frames. Standardization and projection are fitted on training
-participants during downstream fitting.
+backbone path from `--help`; the loader requires the actual release files. C and A
+contain text/audio-conditioned representations; Q encodes the question and prior
+dialogue without the current response or its audio. V uses aligned numeric
+descriptors, not raw video frames. Standardization and projection are fitted on
+training participants during downstream fitting.
 
 The shared encoder interface requires `--meld-source-rows`; its placeholder is
 unused for DAIC-WOZ and E-DAIC. Extraction records model and prompt fingerprints.
@@ -73,46 +74,43 @@ python scripts/run_psypath_alternating_structure_formal.py --phase orchestrate \
 `protocols/psypath_alternating_structure_formal_20260908.md` specifies the paired
 training schedule, development selection and evaluation procedure.
 
-## 3. External architectures
+### Random-Set And Fixed-PIM Controls
 
-Install the dependencies in `THIRD_PARTY.md`. The paper compares ten architectures
-adapted to the shared representations: `tfn lmf mult misa self_mm cubemlp dmd
-simsuf cross_modal_attention` and GsiT.
-
-```bash
-python scripts/run_published_models_on_meter_cache.py \
-  --meter-root CACHE --contract-dir CONTRACT --multibench-root third_party/MultiBench \
-  --external-models-root third_party --output runs/external \
-  --models tfn lmf mult misa self_mm cubemlp dmd simsuf cross_modal_attention \
-  --device cpu --threads 8
-```
-
-`configs/external_*.json` contains per-architecture settings, seeds, epochs,
-weight decay and stopping policy. The command above shows the runner interface;
-the launcher below applies the recorded configurations. `${PROJECT}`,
-`${THIRD_PARTY}` and `${EXTERNAL_RESULTS}` are directory placeholders.
-Architectures retain their respective input processing and parameter counts.
-
-The convenience launcher applies these settings to all three tasks:
-`python reproduce_external.py --cache CACHE --contract CONTRACT --third-party
-third_party --output runs/external --dry-run`. Remove `--dry-run` to execute.
-The launcher uses CPU and eight threads with the recorded model settings.
-
-For GsiT, use the selected author commit and set the following environment paths:
+The following suite reproduces random-set PIM and the paired fixed-PIM policies
+with score-reward weights 0.3 and zero. It uses the main runs' train-fitted event
+projections and configuration. Each control fits a new PIM; both policy arms
+share the same fixed PIM and initial policy weights. The random workflow refits
+PIM using new random sparse sets each cycle. All 15 task/seed development runs
+are locked before test evaluation.
 
 ```bash
-export PSYPATH_CACHE=/absolute/CACHE
-export PSYPATH_CONTRACT=/absolute/CONTRACT
-export PSYPATH_GSIT_UPSTREAM=/absolute/third_party
-export PSYPATH_GSIT_OUTPUT=/absolute/runs/gsit
-python gsit/run_suite.py
+python scripts/run_psypath_review_suite.py --project . \
+  --cache CACHE --contract CONTRACT --main-root runs/main \
+  --output runs/evidence_controls --workers 3 --dry-run
 ```
 
-GsiT retains both development-F1 and development-BCE selections. The former is
-primary; the latter is the selection sensitivity check. All 15 development locks
-are written before test evaluation. `configs/gsit.json` records the protocol.
+Remove `--dry-run` to execute. Each worker uses one CPU thread. Completed runs
+must use a new output directory; existing results are not overwritten. Controls
+use full evidence plus four sparse augmentations, 18 development evaluations
+and 48 test draws. Main-text Table IV compares the complete random workflow;
+Supplementary Table X separates it from the fixed-PIM reward control.
 
-## 4. Mechanism analysis and statistics
+With the locked main-model path records from Section 3, compute the aggregate
+metrics and participant intervals as follows:
+
+```bash
+python scripts/summarize_psypath_review_controls.py \
+  --controls runs/evidence_controls --main-root runs/main \
+  --score-records runs/path_draws --replicates 10000 \
+  --output runs/evidence_control_summary.json
+```
+
+The output includes weighted/positive F1, AUROC, Brier, CCC, MAE, sensitivity,
+specificity and paired participant intervals. `reference/evidence_control_results.json`
+contains the paper aggregates. Participant-level inputs stay in the authorized
+research environment.
+
+## 3. Mechanism analysis and statistics
 
 The cross-fitted deletion audit ranks events by model-output changes on one
 sample group and evaluates deletion on the other. Its selection does not use
@@ -160,7 +158,7 @@ records with `summarize.py`. Some runner outputs also contain population SD
 seed-level effects. Deletion measures prediction dependence, permutation tests
 participant-score correspondence, and grouped averaging evaluates aggregation.
 
-## 5. Training To Online Inference
+## 4. Training To Online Inference
 
 The main runner saves development-selected parameters under
 runs/main/TASK/development_checkpoints/TASK/gflownet/seed_SEED.pt. The test

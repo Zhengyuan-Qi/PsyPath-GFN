@@ -242,18 +242,23 @@ def cache_signature(root: Path, dataset: str) -> str:
     return signature
 
 
-def score_map(contract_dir: Path, task: dict[str, Any]) -> dict[tuple[str, str], float | None]:
-    frame, profile = load_label_profile(
-        contract_dir, task["dataset"], task["score_profile"], include_unlabeled=True
-    )
+def score_map(
+    contract_dir: Path, task: dict[str, Any],
+    allowed_splits: tuple[str, ...] = ("train", "dev", "test"),
+) -> dict[tuple[str, str], float | None]:
+    tables = [load_label_profile(
+        contract_dir, task["dataset"], task["score_profile"],
+        split=split, include_unlabeled=True,
+    ) for split in allowed_splits]
     result: dict[tuple[str, str], float | None] = {}
-    for row in frame.to_dict("records"):
-        value, mask = row.get(profile.target_column), row.get(profile.mask_column)
-        try:
-            score = float(value) if int(mask) == 1 and np.isfinite(float(value)) else None
-        except (TypeError, ValueError):
-            score = None
-        result[(normalize_pid(row["pid"]), str(row["split"]))] = score
+    for frame, profile in tables:
+        for row in frame.to_dict("records"):
+            value, mask = row.get(profile.target_column), row.get(profile.mask_column)
+            try:
+                score = float(value) if int(mask) == 1 and np.isfinite(float(value)) else None
+            except (TypeError, ValueError):
+                score = None
+            result[(normalize_pid(row["pid"]), str(row["split"]))] = score
     return result
 
 
@@ -270,7 +275,7 @@ def load_records(
     signature = cache_signature(cache_root, dataset)
     if split_policy not in {"official", PSYPATH_SPLIT_POLICY}:
         raise ValueError(f"unknown split policy: {split_policy}")
-    official_scores = score_map(contract_dir, task) if split_policy == "official" else None
+    official_scores = score_map(contract_dir, task, allowed_splits) if split_policy == "official" else None
     result: dict[str, list[dict[str, Any]]] = {}
     for split in allowed_splits:
         if split_policy == PSYPATH_SPLIT_POLICY:
