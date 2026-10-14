@@ -1,0 +1,56 @@
+{
+  "schema": "humanomniv2_pooling_classification_v1",
+  "tasks": [
+    "daic_depression",
+    "edaic_depression",
+    "edaic_ptsd"
+  ],
+  "seeds": [
+    7,
+    17,
+    27,
+    41,
+    53
+  ],
+  "label_profiles": {
+    "daic_depression": "depression_phq8_screening",
+    "edaic_depression": "depression_phq8_screening",
+    "edaic_ptsd": "ptsd_dsm_iv_binary"
+  },
+  "split_policy": "Independent task-specific official Train/Dev/Test; no cross-task or cross-release training.",
+  "representation": "Shared frozen HumanOmniV2 C/A/Q/V features and Train-only unsupervised projections. Import only event_projections from audited development checkpoints, no trained downstream weights.",
+  "pooling": "Mean and population standard deviation over all 172-dimensional event vectors; 344 pooled features, standardized using Train only.",
+  "architecture": "Linear(344,H), GELU, Dropout(0.1), Linear(H,H/2), GELU, Linear(H/2,1). No severity head.",
+  "grid": [
+    {
+      "hidden": 64,
+      "weight_decay": 0.0001
+    },
+    {
+      "hidden": 64,
+      "weight_decay": 0.01
+    },
+    {
+      "hidden": 128,
+      "weight_decay": 0.0001
+    },
+    {
+      "hidden": 128,
+      "weight_decay": 0.01
+    }
+  ],
+  "learning_rate": 0.001,
+  "batch_size": 16,
+  "max_epochs": 150,
+  "minimum_epochs": 30,
+  "evaluate_every": 5,
+  "patience_evaluations": 8,
+  "dropout": 0.1,
+  "loss": "BCEWithLogits with Train negative-to-positive count ratio as positive weight; binary screening targets only. No continuous score targets.",
+  "selection": "Largest Dev weighted F1, then AUROC, then smallest Dev classification loss; first wins exact ties. All four candidate traces retained.",
+  "thresholds": "Dev only, 0.10 to 0.90 step 0.005; weighted F1, macro F1, closeness to 0.5.",
+  "test_gate": "All 15 checkpoints and thresholds locked before Test prediction; all predictions committed before reading Test targets for scoring.",
+  "reporting": "All five seeds, mean and sample SD; no seed removal or Test-driven retuning. Severity metrics not applicable.",
+  "device": "cpu",
+  "threads": 8
+}

@@ -1,0 +1,58 @@
+{
+  "schema": "published_model_meter_cache_reproduction_v1",
+  "meter_root": "${PROJECT}/outputs/meter_mh_official_e2e_pipeline_20260813/official_cache",
+  "contract_dir": "${PROJECT}/data/clinical_label_contract_v1",
+  "multibench_root": "${THIRD_PARTY}/MultiBench",
+  "multibench_commit": "49f9be224f342de005b7f001281f33df4301eb22",
+  "split_policy": "official",
+  "preprocessing_fit_partition": "train_only",
+  "checkpoint_selection_partition": "dev_only",
+  "test_policy": "opened_after preprocessing/checkpoint/threshold lock",
+  "stream_mapping": {
+    "text": "concat(clinical, context)",
+    "audio": "answer",
+    "visual": "official visual"
+  },
+  "representation_claim": "protocol-matched architecture reproduction on HumanOmniV2 cache",
+  "models": {
+    "misa": {
+      "paper": "MISA: Modality-Invariant and -Specific Representations for Multimodal Sentiment Analysis",
+      "venue": "ACM MM 2020",
+      "doi": "10.1145/3394171.3413678",
+      "implementation": "topology-preserving cache port audited against declare-lab/MISA",
+      "upstream_commit": "ec42faddde0d210cf7368aebf2118fe9570e7102",
+      "adaptation": "cached sequence encoders and binary head; CMD, difference, and reconstruction losses retained"
+    }
+  },
+  "parameters": {
+    "meter_root": "${PROJECT}/outputs/meter_mh_official_e2e_pipeline_20260813/official_cache",
+    "contract_dir": "${PROJECT}/data/clinical_label_contract_v1",
+    "multibench_root": "${THIRD_PARTY}/MultiBench",
+    "external_models_root": "${THIRD_PARTY}",
+    "output": "${EXTERNAL_RESULTS}/formal_highlevel_20260828/misa",
+    "tasks": [
+      "daic_depression",
+      "edaic_depression",
+      "edaic_ptsd"
+    ],
+    "models": [
+      "misa"
+    ],
+    "seeds": [
+      7,
+      17,
+      27,
+      41,
+      53
+    ],
+    "pca_dim": 32,
+    "max_events": 120,
+    "batch_size": 16,
+    "epochs": 100,
+    "patience": 12,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.001,
+    "device": "cuda",
+    "threads": 8
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "numpy": "2.2.6",
+  "scipy": "1.15.3",
+  "pandas": "2.3.3",
+  "torch": "2.11.0",
+  "scikit-learn": "1.7.2",
+  "joblib": "1.5.3",
+  "transformers": "5.13.0",
+  "accelerate": "1.14.0",
+  "soundfile": "0.14.0",
+  "librosa": "0.11.0",
+  "einops": "0.8.2",
+  "pillow": "12.2.0",
+  "pytest": null,
+  "safetensors": "0.8.0"
+}

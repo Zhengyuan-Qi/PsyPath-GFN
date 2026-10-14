@@ -1,0 +1,67 @@
+{
+  "schema": "humanomniv2_pooling_mtl_v1",
+  "tasks": [
+    "daic_depression",
+    "edaic_depression",
+    "edaic_ptsd"
+  ],
+  "seeds": [
+    7,
+    17,
+    27,
+    41,
+    53
+  ],
+  "split_policy": "Independent task-specific models using each release's official train/dev/test partitions; no parameter sharing across tasks or releases.",
+  "representation": "Same frozen C/A/Q/V event views and training-fitted 24-dimensional view projections as formal PsyPath-GFN. Only event_projections are imported from development checkpoints; policy, PIM, predictions and thresholds are not reused.",
+  "pooling": "Mean and population standard deviation over all event rows of the formal 172-dimensional event vector; 344 pooled features, scaled using Train only.",
+  "architecture": "Linear(344,H), GELU, Dropout(0.1), Linear(H,H/2), GELU, two independent linear scalar outputs for screening logit and normalized severity.",
+  "grid": [
+    {
+      "hidden": 64,
+      "weight_decay": 0.0001
+    },
+    {
+      "hidden": 64,
+      "weight_decay": 0.01
+    },
+    {
+      "hidden": 128,
+      "weight_decay": 0.0001
+    },
+    {
+      "hidden": 128,
+      "weight_decay": 0.01
+    }
+  ],
+  "learning_rate": 0.001,
+  "batch_size": 16,
+  "max_epochs": 150,
+  "minimum_epochs": 30,
+  "evaluate_every": 5,
+  "patience_evaluations": 8,
+  "dropout": 0.1,
+  "severity_weight": 0.3,
+  "loss": "Train-positive-weighted BCEWithLogits + 0.3 * mean absolute normalized severity error over observed-score cases; missing score is masked, never zero-imputed as a target.",
+  "score_bounds": {
+    "daic_depression": [
+      0,
+      24
+    ],
+    "edaic_depression": [
+      0,
+      24
+    ],
+    "edaic_ptsd": [
+      17,
+      85
+    ]
+  },
+  "selection": "Per task and seed: largest Dev weighted F1, then AUROC, then smallest joint Dev loss; earlier candidate/checkpoint wins exact ties. All four candidate traces retained.",
+  "thresholds": "Dev only: 0.10 through 0.90 inclusive, step 0.005; weighted F1, then macro F1, then proximity to 0.5.",
+  "test_gate": "All 15 selected checkpoint hashes and thresholds committed before loading Test targets or generating Test predictions. Predictions from all 15 runs committed before Test targets loaded for scoring.",
+  "reporting": "All five seeds; means and sample SD. Do not drop negative comparisons or retune after Test.",
+  "scope": "Supervision-matched ordinary pooling baseline; not a compute-matched or parameter-matched ablation, and not full-backbone finetuning.",
+  "device": "cpu",
+  "threads": 8
+}

@@ -1,0 +1,170 @@
+{
+  "task": "daic_depression",
+  "label_profile": "depression_phq8_screening",
+  "source_sha256": "9b3ad7b26d07e29391ea76d1b443b300b9ed8888305654afb3afe8e3b4316626",
+  "cache_signature": "02257986158918f6acf0bf8b92ee6f4b6b1f647896d48c67efc167816bf45256",
+  "config": {
+    "meter_root": "outputs/meter_mh_official_e2e_pipeline_20260813/official_cache",
+    "contract_dir": "data/clinical_label_contract_v1",
+    "output": "outputs/psychometric_gfn_formal_suite_v1_20260818/pim_gflownet/daic_depression",
+    "task": "daic_depression",
+    "variant": "no_ensr",
+    "seeds": [
+      7,
+      17,
+      27,
+      41,
+      53
+    ],
+    "device": "cpu",
+    "threads": 6,
+    "cycles": 3,
+    "epochs_per_cycle": 6,
+    "hidden_dim": 64,
+    "phenotype_count": 4,
+    "minimum_events": 2,
+    "maximum_events": 16,
+    "maximum_fraction": 0.3,
+    "operator_trajectories": 4,
+    "selector_trajectories": 4,
+    "development_samples": 16,
+    "test_samples": 48,
+    "measurement_components": 48,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "gradient_accumulation": 4,
+    "max_grad_norm": 1.0,
+    "pim_reward_weight": 0.3,
+    "ensr_reward_weight": 0.2,
+    "sufficiency_weight": 1.0,
+    "compactness_weight": 0.05,
+    "necessity_margin": 0.05,
+    "specificity_margin": 0.02,
+    "reward_temperature": 0.5,
+    "entropy_weight": 0.01,
+    "gflownet_only": false,
+    "selector_method": "gflownet"
+  },
+  "runs": [
+    {
+      "seed": 7,
+      "metrics": {
+        "n": 47,
+        "threshold": 0.44999999999999996,
+        "accuracy": 0.7659574468085106,
+        "weighted_f1": 0.775945037983112,
+        "macro_f1": 0.7548601232811759,
+        "positive_f1": 0.7027027027027027,
+        "brier": 0.16202624657067713,
+        "auroc": 0.9112554112554112,
+        "recomputed_f1": 0.775945037983112,
+        "recomputed_auroc": 0.9112554112554112
+      },
+      "severity": {
+        "n": 47,
+        "ccc": 0.4254704049760976,
+        "mae": 4.2049416869033305,
+        "rmse": 5.1450727274876105
+      },
+      "selected_cycle": 3,
+      "selected_epoch": 1,
+      "checkpoint_sha256": "3a5e6b7620fc6ebd66cc223a69c96e68cf63805c75d6eacd233be16917f7b189"
+    },
+    {
+      "seed": 17,
+      "metrics": {
+        "n": 47,
+        "threshold": 0.475,
+        "accuracy": 0.7446808510638298,
+        "weighted_f1": 0.7554414282220592,
+        "macro_f1": 0.7298850574712643,
+        "positive_f1": 0.6666666666666666,
+        "brier": 0.18072956195047507,
+        "auroc": 0.8658008658008658,
+        "recomputed_f1": 0.7554414282220592,
+        "recomputed_auroc": 0.8658008658008658
+      },
+      "severity": {
+        "n": 47,
+        "ccc": 0.40710452819626336,
+        "mae": 4.2662943183107584,
+        "rmse": 5.23376795811196
+      },
+      "selected_cycle": 2,
+      "selected_epoch": 2,
+      "checkpoint_sha256": "dfb2fdfa732402c52111ba193403cbf484389e9ed572112e78b68490df29726b"
+    },
+    {
+      "seed": 27,
+      "metrics": {
+        "n": 47,
+        "threshold": 0.475,
+        "accuracy": 0.8085106382978723,
+        "weighted_f1": 0.8166823038043642,
+        "macro_f1": 0.7994310099573257,
+        "positive_f1": 0.7567567567567568,
+        "brier": 0.1894923371125288,
+        "auroc": 0.854978354978355,
+        "recomputed_f1": 0.8166823038043642,
+        "recomputed_auroc": 0.854978354978355
+      },
+      "severity": {
+        "n": 47,
+        "ccc": 0.36089159666659776,
+        "mae": 4.465030621869343,
+        "rmse": 5.381282790470313
+      },
+      "selected_cycle": 1,
+      "selected_epoch": 5,
+      "checkpoint_sha256": "5d6cfc85f6460d9ab3c3dc4ab691b4a902d29b3810319755a54cb5a1025fdf03"
+    },
+    {
+      "seed": 41,
+      "metrics": {
+        "n": 47,
+        "threshold": 0.44999999999999996,
+        "accuracy": 0.7021276595744681,
+        "weighted_f1": 0.7116748499727221,
+        "macro_f1": 0.6987179487179487,
+        "positive_f1": 0.6666666666666666,
+        "brier": 0.18857114661193425,
+        "auroc": 0.8809523809523809,
+        "recomputed_f1": 0.7116748499727221,
+        "recomputed_auroc": 0.8809523809523809
+      },
+      "severity": {
+        "n": 47,
+        "ccc": 0.4136535608743177,
+        "mae": 4.250539343936224,
+        "rmse": 5.161679509402261
+      },
+      "selected_cycle": 1,
+      "selected_epoch": 3,
+      "checkpoint_sha256": "0433029d726bb499b7316b991e894b56ebd4369a45899201cb6b7e6c633ae66f"
+    },
+    {
+      "seed": 53,
+      "metrics": {
+        "n": 47,
+        "threshold": 0.475,
+        "accuracy": 0.7021276595744681,
+        "weighted_f1": 0.7146816662590689,
+        "macro_f1": 0.6848659003831418,
+        "positive_f1": 0.6111111111111112,
+        "brier": 0.2040920872953193,
+        "auroc": 0.8095238095238095,
+        "recomputed_f1": 0.7146816662590689,
+        "recomputed_auroc": 0.8095238095238095
+      },
+      "severity": {
+        "n": 47,
+        "ccc": 0.3098186707622959,
+        "mae": 4.5736250053060825,
+        "rmse": 5.5734323499577805
+      },
+      "selected_cycle": 1,
+      "selected_epoch": 3,
+      "checkpoint_sha256": "7b8255248c642e69744062b7a72dc533e99b964c83827a2d5427d71d070b2f5c"
+    }
+  ]
+}

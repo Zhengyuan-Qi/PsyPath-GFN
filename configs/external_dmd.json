@@ -1,0 +1,60 @@
+{
+  "schema": "published_model_meter_cache_reproduction_v1",
+  "meter_root": "${PROJECT}/outputs/meter_mh_official_e2e_pipeline_20260813/official_cache",
+  "contract_dir": "${PROJECT}/data/clinical_label_contract_v1",
+  "multibench_root": "${THIRD_PARTY}/MultiBench",
+  "multibench_commit": "49f9be224f342de005b7f001281f33df4301eb22",
+  "split_policy": "official",
+  "preprocessing_fit_partition": "train_only",
+  "checkpoint_selection_partition": "dev_only",
+  "test_policy": "opened_after preprocessing/checkpoint/threshold lock",
+  "stream_mapping": {
+    "text": "concat(clinical, context)",
+    "audio": "answer",
+    "visual": "official visual"
+  },
+  "representation_claim": "protocol-matched architecture reproduction on HumanOmniV2 cache",
+  "models": {
+    "dmd": {
+      "paper": "Decoupled Multimodal Distilling for Emotion Recognition",
+      "venue": "CVPR 2023 Highlight",
+      "implementation": "topology-preserving cache port audited against mdswyz/DMD",
+      "upstream_commit": "516d4e116c22220e08873fa38df828d1a0d6f7e8",
+      "adaptation": "shared/specific decomposition, reconstruction and cycle consistency, HomoGD/HeteroGD dynamic directed distillation, auxiliary heads, and joint objective retained"
+    }
+  },
+  "parameters": {
+    "meter_root": "${PROJECT}/outputs/meter_mh_official_e2e_pipeline_20260813/official_cache",
+    "contract_dir": "${PROJECT}/data/clinical_label_contract_v1",
+    "multibench_root": "${THIRD_PARTY}/MultiBench",
+    "external_models_root": "${THIRD_PARTY}",
+    "output": "${EXTERNAL_RESULTS}/formal_highlevel_20260828/dmd",
+    "tasks": [
+      "daic_depression",
+      "edaic_depression",
+      "edaic_ptsd"
+    ],
+    "models": [
+      "dmd"
+    ],
+    "seeds": [
+      7,
+      17,
+      27,
+      41,
+      53
+    ],
+    "pca_dim": 32,
+    "max_events": 120,
+    "batch_size": 16,
+    "epochs": 100,
+    "patience": 12,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.001,
+    "niat_missing_rate": 0.2,
+    "niat_corruption": "structured",
+    "dmd_accumulation_steps": 10,
+    "device": "cuda",
+    "threads": 12
+  }
+}

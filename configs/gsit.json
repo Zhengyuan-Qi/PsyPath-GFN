@@ -1,0 +1,44 @@
+{
+  "tasks": [
+    "daic_depression",
+    "edaic_depression",
+    "edaic_ptsd"
+  ],
+  "seeds": [
+    7,
+    17,
+    27,
+    41,
+    53
+  ],
+  "models": [
+    "gsit"
+  ],
+  "label_profiles": {
+    "depression": "depression_phq8_screening",
+    "ptsd": "ptsd_dsm_iv_binary"
+  },
+  "split": "release-specific official; independently trained tasks",
+  "input": "shared cached evidence streams: clinical+context, answer, visual; train-only standardization and PCA32; first120 valid events resampled to50",
+  "epochs": 100,
+  "minimum_epochs": 20,
+  "patience": 15,
+  "stopping": "development BCE",
+  "learning_rate": 0.0001,
+  "weight_decay": 0.0001,
+  "batch_size": 16,
+  "balance": "class-weighted CE only; no weighted sampling",
+  "primary_selection": "development weighted F1, then AUROC, then negative BCE",
+  "secondary_selection": "development BCE; sensitivity only",
+  "threshold_grid": [
+    0.1,
+    0.9,
+    0.005
+  ],
+  "scope": "architecture adaptations, not original input encoders or original reported benchmark reproduction",
+  "upstream_commits": {
+    "gsit": "76332ba433ea93fba1b2ebe9f1c85587f5b99a13"
+  },
+  "adapter_sha256": "de576807b4e15e0784a05b0a23bec51d9246310379f79b4db9de91f80d0ac360",
+  "runner_sha256": "a5c5d7e21035099b69be609308c1f8097db719d3150e16bc948083bfaea4e1c1"
+}

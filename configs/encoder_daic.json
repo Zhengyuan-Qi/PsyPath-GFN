@@ -1,0 +1,38 @@
+{
+  "schema": "meter_mh_cache_v1",
+  "dataset": "daic",
+  "model": "${HUMANOMNIV2_WEIGHTS}",
+  "model_files_fingerprint_sha256": "253336004a156a6913856baba6a3abd409e48f6d10c1521743fc9586a5fb448d",
+  "view_contract": {
+    "schema": "meter_mh_prompt_contract_v1",
+    "prompt_version": "METER-MH multi-instrument evidence and temporal-response measurement v1.0",
+    "prompt_sha256": {
+      "benchmark_anchor": "47b8dd25bb4e4714f06551ed886421ff2eb800f9ebec30ed56a20a94d0c83ceb",
+      "clinical": "ef1eb51af1648c76a5290ab20fcc13f210ccf1ff2291763382261ef67f1ecfdc",
+      "answer": "123bcdfae900c8b653022054c756426d69ce5cc621d96f6e85eca3a9e6d7b306",
+      "context": "b726d32ca7da60e5ae52319096381fe275779442ecff5a80dffe4443f197a855"
+    },
+    "benchmark_information_retained": true,
+    "raw_labels_in_prompt": false,
+    "diagnostic_instruction": false,
+    "clinical_score_prediction_in_prompt": false,
+    "instrument_mapping_deferred_downstream": true,
+    "missing_question_policy": "explicit QUESTION_UNAVAILABLE; never reconstruct",
+    "missing_history_policy": "explicit HISTORY_UNAVAILABLE; never impute",
+    "missing_modality_policy": "availability mask; missing is not observed absence",
+    "timing_policy": "only supplied aligned boundaries; unknown is never zero-filled",
+    "visual_policy": "official visual feature stream is stored separately downstream",
+    "allowed_views": [
+      "clinical",
+      "answer",
+      "context"
+    ]
+  },
+  "history_turns": 8,
+  "max_history_chars": 10000,
+  "batch_size": 1,
+  "threads": 16,
+  "raw_inputs_read_only": true,
+  "encoder_implementation_sha256": "ef79817f047ffaeb99989e47b2ad12c80b1ccfe3733412f68d291d7cf83509b2",
+  "run_signature": "02257986158918f6acf0bf8b92ee6f4b6b1f647896d48c67efc167816bf45256"
+}

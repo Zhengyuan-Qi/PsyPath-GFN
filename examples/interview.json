@@ -1,0 +1,6 @@
+{
+  "dataset": "daic",
+  "dataset_root": "/absolute/path/to/authorized/DAIC-WOZ",
+  "participant_id": "REPLACE_WITH_AUTHORIZED_ID",
+  "task": "daic_depression"
+}
